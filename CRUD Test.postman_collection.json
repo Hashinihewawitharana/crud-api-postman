@@ -1,0 +1,265 @@
+{
+  "info": {
+    "_postman_id": "3edbb7d1-5c30-4eb8-895c-129a0ffbe878",
+    "name": "CRUD Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40816421",
+    "_collection_link": "https://go.postman.co/collection/40816421-3edbb7d1-5c30-4eb8-895c-129a0ffbe878?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "get books",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));\r",
+              "\r",
+              "pm.test(\"First product has ID\", () => {\r",
+              "    let json = pm.response.json();\r",
+              "    pm.expect(json.products[0]).to.have.property(\"id\");\r",
+              "    \r",
+              "    // Optionally store it for later use\r",
+              "    pm.environment.set(\"id\", json.products[0].id);\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true,
+        "strictSSL": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dummyjson.com/products",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "add book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));\r",
+              "\r",
+              "pm.test(\"Created product has ID\", () => {\r",
+              "    let json = pm.response.json();\r",
+              "    pm.expect(json).to.have.property(\"id\");\r",
+              "    pm.environment.set(\"productId\", json.id);  // Save for other requests\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"AI in Libraries\",\r\n  \"description\": \"An exploration of AI applications in modern libraries.\",\r\n  \"price\": 15,\r\n  \"brand\": \"LibraryPress\",\r\n  \"category\": \"books\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUri}}/products/add",
+          "host": [
+            "{{baseUri}}"
+          ],
+          "path": [
+            "products",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Partial Update book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));\r",
+              "pm.test(\"title updated\", () => {\r",
+              "    let json = pm.response.json();\r",
+              "    pm.expect(json.title).to.eql(\"The Art of Digital Librarianship\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"The Art of Digital Librarianship\"\r\n  \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUri}}/products/2",
+          "host": [
+            "{{baseUri}}"
+          ],
+          "path": [
+            "products",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Product deleted\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.have.property(\"isDeleted\", true);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"id\": 3,\r\n  \"title\": \"Powder Canister\",\r\n  \"isDeleted\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUri}}/products/3",
+          "host": [
+            "{{baseUri}}"
+          ],
+          "path": [
+            "products",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Full update book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));\r",
+              "\r",
+              "pm.test(\"Title updated correctly\", () => {\r",
+              "    let json = pm.response.json();\r",
+              "    pm.expect(json.title).to.eql(\"AI in Libraries - Revised Edition\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Price updated correctly\", () => {\r",
+              "    let json = pm.response.json();\r",
+              "    pm.expect(json.price).to.eql(20);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"AI in Libraries - Revised Edition\",\r\n  \"price\": 20\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUri}}/products/1",
+          "host": [
+            "{{baseUri}}"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUri",
+      "value": "https://dummyjson.com",
+      "type": "default"
+    }
+  ]
+}
